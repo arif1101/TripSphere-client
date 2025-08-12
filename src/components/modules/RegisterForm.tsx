@@ -60,7 +60,10 @@ export function RegisterForm({
       password: data.password
     };
 
+
+    
     try{
+      console.log("----", userInfo)
       const result = await register(userInfo).unwrap();
       console.log(result)
       toast.success("User created successfully")

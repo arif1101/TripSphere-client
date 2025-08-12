@@ -8,6 +8,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import config from "@/config";
 import { cn } from "@/lib/utils";
 import { useLoginMutation } from "@/redux/features/auth/auth.api";
 import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
@@ -23,11 +24,16 @@ export function LoginForm({
   const [login] = useLoginMutation();
   
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+
     try {
       const res = await login(data).unwrap();
       console.log(res);
+      if(res.success){
+        toast.success("Login successfully")
+        navigate("/")
+      }
     } catch (err) {
-      console.error(err.data.message);
+      console.error(err);
 
       if(err.data.message === "Password does not match"){
         toast.error("Invalid credentials")
@@ -101,6 +107,7 @@ export function LoginForm({
         </div>
 
         <Button
+        onClick={() => window.open(`${config.baseUrl}/auth/google`)}
           type="button"
           variant="outline"
           className="w-full cursor-pointer"
