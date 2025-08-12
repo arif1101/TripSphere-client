@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -8,20 +7,37 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { useForm } from "react-hook-form";
-import { Link } from "react-router";
-import { Input } from "../ui/input";
+import { useLoginMutation } from "@/redux/features/auth/auth.api";
+import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
+import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
 
 export function LoginForm({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const form = useForm();
-  // const [login] = useLoginMutation();
-  const onSubmit = (data) => {
-    console.log(data)
+  const [login] = useLoginMutation();
+  
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    try {
+      const res = await login(data).unwrap();
+      console.log(res);
+    } catch (err) {
+      console.error(err.data.message);
+
+      if(err.data.message === "Password does not match"){
+        toast.error("Invalid credentials")
+      }
+
+      if (err.status === 401) {
+        toast.error("Your account is not verified");
+        navigate("/verify", { state: data.email });
+      }
+    }
   };
 
   return (
@@ -34,7 +50,7 @@ export function LoginForm({
       </div>
       <div className="grid gap-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}  className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
               name="email"
@@ -61,6 +77,7 @@ export function LoginForm({
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input
+                      type="password"
                       placeholder="********"
                       {...field}
                       value={field.value || ""}
