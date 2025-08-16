@@ -24,20 +24,13 @@ interface IVerifyOtp {
 }
 
 
-export const tourApi = baseApi.injectEndpoints({
+export const divisionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    addTourType: builder.mutation({
-      query: (tourTypeName) => ({
-        url: "/tour/create-tour-type",
+    addDivision: builder.mutation({
+      query: (divisionData) => ({
+        url: "/division/create",
         method: "POST",
-        data: tourTypeName,
-      }),
-      invalidatesTags: ["TOUR"]
-    }),
-    removeTourType: builder.mutation({
-      query: (tourTypeId) => ({
-        url: `/tour/tour-types/${tourTypeId}`,
-        method: "DELETE"
+        data: divisionData,
       }),
       invalidatesTags: ["TOUR"]
     }),
@@ -52,4 +45,4 @@ export const tourApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetTourTypesQuery, useAddTourTypeMutation,useRemoveTourTypeMutation } = tourApi;
+export const {useAddDivisionMutation  } = divisionApi;
