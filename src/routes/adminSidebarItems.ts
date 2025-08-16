@@ -1,5 +1,6 @@
 
 import AddDivision from "@/pages/Admin/AddDivision";
+import AddTour from "@/pages/Admin/AddTour";
 import AddTourType from "@/pages/Admin/AddTourType";
 // import Analytics from "@/pages/Analytics";
 import type { ISidebarItem } from "@/types";
@@ -29,6 +30,11 @@ export const adminSidebarItems : ISidebarItem[] = [
         title: "Add Division",
         url: "/admin/add-division",
         component: AddDivision
+      },
+      {
+        title: "Add Tour",
+        url: "/admin/add-tour",
+        component: AddTour
       },
     ],
   }
