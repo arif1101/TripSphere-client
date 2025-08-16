@@ -32,17 +32,17 @@ export const divisionApi = baseApi.injectEndpoints({
         method: "POST",
         data: divisionData,
       }),
-      invalidatesTags: ["TOUR"]
+      invalidatesTags: ["DIVISION"]
     }),
-    getTourTypes: builder.query({
+    getDivisions: builder.query({
       query: () => ({
-        url: "/tour/tour-types",
+        url: "/division",
         method: "GET",
       }),
-      providesTags: ["TOUR"],
+      providesTags: ["DIVISION"],
       transformResponse: (response) => response.data,
     }),
   }),
 });
 
-export const {useAddDivisionMutation  } = divisionApi;
+export const {useAddDivisionMutation, useGetDivisionsQuery } = divisionApi;
