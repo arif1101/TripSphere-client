@@ -57,7 +57,16 @@ export const tourApi = baseApi.injectEndpoints({
       providesTags: ["TOUR"],
       transformResponse: (response) => response.data,
     }),
+    getAllTours: builder.query({
+      query: (params) => ({
+        url: "/tour",
+        method: "GET",
+        params
+      }),
+      providesTags: ["TOUR"],
+      transformResponse: (response) => response.data,
+    })
   }),
 });
 
-export const { useGetTourTypesQuery, useAddTourTypeMutation,useRemoveTourTypeMutation, useAddTourMutation } = tourApi;
+export const { useGetTourTypesQuery, useAddTourTypeMutation,useRemoveTourTypeMutation, useAddTourMutation, useGetAllToursQuery } = tourApi;
