@@ -1,51 +1,50 @@
-
-import Logo from "@/assets/icons/Logo"
-import { Button } from "@/components/ui/button"
+import Logo from "@/assets/icons/Logo";
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from "@/components/ui/navigation-menu"
+} from "@/components/ui/navigation-menu";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { ModeToggle } from "./ModeToggle"
-import { Link } from "react-router"
-import { authApi, useLogoutMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api"
-import { useAppDispatch } from "@/redux/hook"
-import { role } from "@/constants/role"
+} from "@/components/ui/popover";
+import { Link } from "react-router";
+import {
+  authApi,
+  useLogoutMutation,
+  useUserInfoQuery,
+} from "@/redux/features/auth/auth.api";
+import { useAppDispatch } from "@/redux/hook";
+import { role } from "@/constants/role";
+import React from "react";
+import { ModeToggle } from "./ModeToggle";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-  { href: "/", label: "Home",role: "PUBLIC" },
-  { href: "/about", label: "About", role: "PUBLIC"},
+  { href: "/", label: "Home", role: "PUBLIC" },
+  { href: "/about", label: "About", role: "PUBLIC" },
+  { href: "/tours", label: "Tours", role: "PUBLIC" },
+  { href: "/admin", label: "Dashboard", role: role.admin },
   { href: "/admin", label: "Dashboard", role: role.superAdmin },
-  { href: "/admin", label: "Dashboard", role: role.admin},
   { href: "/user", label: "Dashboard", role: role.user },
-  { href: "/tours", label: "Tours", role: "PUBLIC"},
-]
+];
 
 export default function Navbar() {
-
-
-  const {data} = useUserInfoQuery(undefined);
-  const [logout] = useLogoutMutation()
-  const dispatch = useAppDispatch()
+  const { data } = useUserInfoQuery(undefined);
+  const [logout] = useLogoutMutation();
+  const dispatch = useAppDispatch();
 
   const handleLogout = async () => {
     await logout(undefined);
     dispatch(authApi.util.resetApiState());
   };
 
-  // console.log(navigationLinks)
-  
-  
   return (
-    <header className="border-b px-4 md:px-6">
-      <div className="flex h-16 justify-between gap-4">
+    <header className="border-b">
+      <div className="container mx-auto px-4 flex h-16 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex items-center gap-2">
           {/* Mobile menu trigger */}
@@ -88,11 +87,8 @@ export default function Navbar() {
                 <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                   {navigationLinks.map((link, index) => (
                     <NavigationMenuItem key={index} className="w-full">
-                      <NavigationMenuLink
-                        asChild
-                        className="py-1.5"
-                      >
-                        <Link to={link.href}>{link.label}</Link>
+                      <NavigationMenuLink asChild className="py-1.5">
+                        <Link to={link.href}>{link.label} </Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                   ))}
@@ -109,9 +105,9 @@ export default function Navbar() {
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
                 {navigationLinks.map((link, index) => (
-                  <>
-                    {link.role === "PUBLIC" &&  (
-                      <NavigationMenuItem key={index}>
+                  <React.Fragment key={index}>
+                    {link.role === "PUBLIC" && (
+                      <NavigationMenuItem>
                         <NavigationMenuLink
                           asChild
                           className="text-muted-foreground hover:text-primary py-1.5 font-medium"
@@ -121,7 +117,7 @@ export default function Navbar() {
                       </NavigationMenuItem>
                     )}
                     {link.role === data?.data?.role && (
-                      <NavigationMenuItem key={index}>
+                      <NavigationMenuItem>
                         <NavigationMenuLink
                           asChild
                           className="text-muted-foreground hover:text-primary py-1.5 font-medium"
@@ -130,7 +126,7 @@ export default function Navbar() {
                         </NavigationMenuLink>
                       </NavigationMenuItem>
                     )}
-                  </>
+                  </React.Fragment>
                 ))}
               </NavigationMenuList>
             </NavigationMenu>
@@ -139,19 +135,22 @@ export default function Navbar() {
         {/* Right side */}
         <div className="flex items-center gap-2">
           <ModeToggle/>
-
           {data?.data?.email && (
-            <Button onClick={handleLogout} variant="outline" className="text-sm">
+            <Button
+              onClick={handleLogout}
+              variant="outline"
+              className="text-sm"
+            >
               Logout
             </Button>
           )}
           {!data?.data?.email && (
-            <Button asChild className="text-sm bg-amber-500 hover:bg-amber-600">
+            <Button asChild className="text-sm">
               <Link to="/login">Login</Link>
             </Button>
           )}
         </div>
       </div>
     </header>
-  )
+  );
 }
